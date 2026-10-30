@@ -96,12 +96,14 @@ export class Airplane {
     goggle.position.set(0, 0.35, 0.2);
     this.mesh.add(goggle);
 
-    // 2. Wings
+    // 2. Wings (symmetrical from left tip -3.2 to right tip +3.2)
     const wingShape = new THREE.Shape();
-    wingShape.moveTo(-0.8, 0);
+    wingShape.moveTo(0.5, 3.2);
     wingShape.lineTo(0.8, 0);
     wingShape.lineTo(0.5, -3.2);
     wingShape.lineTo(-0.5, -3.2);
+    wingShape.lineTo(-0.8, 0);
+    wingShape.lineTo(-0.5, 3.2);
     wingShape.closePath();
 
     const extrudeSettings = { depth: 0.08, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: 0.02, bevelThickness: 0.02 };
