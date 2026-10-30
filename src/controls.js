@@ -3,10 +3,9 @@ export class ControlsManager {
     this.weatherManager = weatherManager;
     this.onWeatherChanged = onWeatherChanged;
 
-    // Control values (-1 to 1)
-    this.pitch = 0;
-    this.roll = 0;
-    this.yaw = 0;
+    // Directional control values (-1 to 1)
+    this.upDown = 0;    // +1 = Up, -1 = Down
+    this.leftRight = 0; // -1 = Left, +1 = Right
     this.throttleDelta = 0;
     this.targetThrottle = 0.5;
 
@@ -95,8 +94,8 @@ export class ControlsManager {
         if (touch.identifier === this.joystickTouchId) {
           this.touchJoystickActive = false;
           this.joystickTouchId = null;
-          this.pitch = 0;
-          this.roll = 0;
+          this.upDown = 0;
+          this.leftRight = 0;
           if (joystickStick) joystickStick.style.transform = 'translate(0px, 0px)';
         }
         if (touch.identifier === this.throttleTouchId) {
@@ -139,9 +138,9 @@ export class ControlsManager {
       joystickStick.style.transform = `translate(${stickX}px, ${stickY}px)`;
     }
 
-    // Map Joystick to Roll & Pitch
-    this.roll = stickX / maxRadius;  // Left (-1) / Right (+1)
-    this.pitch = stickY / maxRadius; // Up (+1 pitch down) / Down (-1 pitch up)
+    // Map Joystick to Directional Up/Down & Left/Right
+    this.leftRight = stickX / maxRadius; // Left (-1) / Right (+1)
+    this.upDown = -stickY / maxRadius;   // Up (+1) / Down (-1)
   }
 
   _updateThrottlePos(clientY, throttleTrack, throttleHandle) {
@@ -162,33 +161,27 @@ export class ControlsManager {
 
   update(physics, delta) {
     // Desktop Keyboard overrides / updates
-    let kPitch = 0;
-    let kRoll = 0;
-    let kYaw = 0;
+    let kUpDown = 0;
+    let kLeftRight = 0;
     let kThrottleDelta = 0;
 
-    if (this.keys['KeyW'] || this.keys['ArrowUp']) kPitch += 1.0;   // Pitch down
-    if (this.keys['KeyS'] || this.keys['ArrowDown']) kPitch -= 1.0; // Pitch up
+    if (this.keys['KeyW'] || this.keys['ArrowUp']) kUpDown += 1.0;   // Move Up
+    if (this.keys['KeyS'] || this.keys['ArrowDown']) kUpDown -= 1.0; // Move Down
 
-    if (this.keys['KeyA'] || this.keys['ArrowLeft']) kRoll -= 1.0;  // Roll left
-    if (this.keys['KeyD'] || this.keys['ArrowRight']) kRoll += 1.0; // Roll right
-
-    if (this.keys['KeyQ']) kYaw -= 1.0; // Yaw left
-    if (this.keys['KeyE']) kYaw += 1.0; // Yaw right
+    if (this.keys['KeyA'] || this.keys['ArrowLeft']) kLeftRight -= 1.0; // Move Left
+    if (this.keys['KeyD'] || this.keys['ArrowRight']) kLeftRight += 1.0; // Move Right
 
     if (this.keys['ShiftLeft'] || this.keys['ShiftRight']) kThrottleDelta += 0.5 * delta;
     if (this.keys['ControlLeft'] || this.keys['ControlRight']) kThrottleDelta -= 0.5 * delta;
 
     // Combine Joystick touch + Keyboard input
-    const finalPitch = this.touchJoystickActive ? this.pitch : kPitch;
-    const finalRoll = this.touchJoystickActive ? this.roll : kRoll;
-    const finalYaw = kYaw;
+    const finalUpDown = this.touchJoystickActive ? this.upDown : kUpDown;
+    const finalLeftRight = this.touchJoystickActive ? this.leftRight : kLeftRight;
 
     if (this.touchThrottleActive) {
       physics.setThrottle(this.targetThrottle);
-    } else {
-      physics.setInputs(finalPitch, finalRoll, finalYaw, kThrottleDelta);
     }
+    physics.setInputs(finalUpDown, finalLeftRight, 0, kThrottleDelta);
   }
 
   checkCameraModeToggle() {
