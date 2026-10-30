@@ -4,6 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>3D Flight Simulator</title>
+    <!-- Import maps for running raw ES modules directly on GitHub Pages if static index.html served -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.174.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.174.0/examples/jsm/",
+          "simplex-noise": "https://unpkg.com/simplex-noise@4.0.3/dist/esm/simplex-noise.js"
+        }
+      }
+    </script>
     <link rel="stylesheet" href="./src/style.css" />
   </head>
   <body>

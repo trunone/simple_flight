@@ -164,7 +164,25 @@ class Game {
   }
 }
 
-// Start Game on DOM Load
-window.addEventListener('DOMContentLoaded', () => {
-  new Game();
-});
+// Start Game safely (handles both instant/already-loaded DOM and DOMContentLoaded event)
+function initGame() {
+  if (window.__gameInstance) return;
+  try {
+    window.__gameInstance = new Game();
+  } catch (err) {
+    console.error('Failed to initialize 3D game:', err);
+    const hud = document.getElementById('hud');
+    if (hud) {
+      const errDiv = document.createElement('div');
+      errDiv.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#f87171;background:rgba(0,0,0,0.85);padding:16px24px;border-radius:12px;text-align:center;font-family:sans-serif;z-index:9999;border:1px solid #f87171;';
+      errDiv.innerHTML = `<h3>WebGL Initialization Error</h3><p style="font-size:12px;margin-top:8px;">${err.message || err}</p>`;
+      hud.appendChild(errDiv);
+    }
+  }
+}
+
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', initGame);
+} else {
+  initGame();
+}
