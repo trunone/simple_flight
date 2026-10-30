@@ -1,0 +1,19 @@
+{
+  "name": "3d-flight-game",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "simplex-noise": "^4.0.3",
+    "three": "^0.174.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.1",
+    "vite": "^6.2.0"
+  }
+}

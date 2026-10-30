@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>3D Flight Simulator</title>
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <div id="canvas-container"></div>
+
+    <!-- HUD Overlay -->
+    <div id="hud">
+      <!-- Top Instrument Panel -->
+      <div id="top-panel">
+        <div class="hud-card">
+          <span class="hud-label">SPEED</span>
+          <div class="hud-value-container">
+            <span id="speed-val" class="hud-value">0</span>
+            <span class="hud-unit">KM/H</span>
+          </div>
+          <div class="hud-bar-bg"><div id="speed-bar" class="hud-bar-fill"></div></div>
+        </div>
+
+        <div class="hud-card">
+          <span class="hud-label">ALTITUDE</span>
+          <div class="hud-value-container">
+            <span id="altitude-val" class="hud-value">0</span>
+            <span class="hud-unit">M</span>
+          </div>
+          <div class="hud-bar-bg"><div id="altitude-bar" class="hud-bar-fill"></div></div>
+        </div>
+
+        <div class="hud-card compass-card">
+          <span class="hud-label">HEADING</span>
+          <div id="compass-display">
+            <span id="heading-val" class="hud-value">000°</span>
+            <span id="heading-dir" class="hud-badge">N</span>
+          </div>
+        </div>
+
+        <div class="hud-card weather-card">
+          <span class="hud-label">WEATHER</span>
+          <div id="weather-badge" class="hud-badge weather-clear">CLEAR</div>
+        </div>
+      </div>
+
+      <!-- Center Crosshair / Horizon Indicator -->
+      <div id="crosshair">
+        <div class="crosshair-ring"></div>
+        <div class="crosshair-line left"></div>
+        <div class="crosshair-line right"></div>
+        <div class="crosshair-dot"></div>
+      </div>
+
+      <!-- Controls Overlay for Desktop & Mobile -->
+      <div id="controls-panel">
+        <!-- Mobile Joystick & Touch Controls -->
+        <div id="mobile-joystick-zone" class="touch-zone">
+          <div id="joystick-base">
+            <div id="joystick-stick"></div>
+          </div>
+        </div>
+
+        <div id="mobile-throttle-zone" class="touch-zone">
+          <div id="throttle-track">
+            <div id="throttle-handle">
+              <span class="throttle-text">PWR</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Desktop Controls Help -->
+        <div id="desktop-help">
+          <div class="help-item"><kbd>W</kbd>/<kbd>S</kbd> Pitch Down/Up</div>
+          <div class="help-item"><kbd>A</kbd>/<kbd>D</kbd> Roll Left/Right</div>
+          <div class="help-item"><kbd>Q</kbd>/<kbd>E</kbd> Yaw Left/Right</div>
+          <div class="help-item"><kbd>Shift</kbd>/<kbd>Ctrl</kbd> Throttle +/-</div>
+          <div class="help-item"><kbd>C</kbd> Camera View</div>
+          <div class="help-item"><kbd>R</kbd> Change Weather</div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
