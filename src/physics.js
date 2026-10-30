@@ -60,8 +60,8 @@ export class FlightPhysics {
     // 3. Target Pitch & Roll for visual orientation and movement direction
     // Input UP (+1) tilts nose UP (-pitch), Input DOWN (-1) tilts nose DOWN (+pitch)
     const targetPitch = -this.inputUpDown * this.maxPitchAngle;
-    // Input LEFT (-1) banks left (-roll), Input RIGHT (+1) banks right (+roll)
-    const targetRoll = this.inputLeftRight * this.maxRollAngle;
+    // Input LEFT (-1) banks left (+roll: left wing down), Input RIGHT (+1) banks right (-roll: right wing down)
+    const targetRoll = -this.inputLeftRight * this.maxRollAngle;
 
     // Smoothly interpolate current pitch & roll towards targets (auto-leveling when input is 0)
     const lerpFactor = delta * 5.0;
