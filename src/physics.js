@@ -53,15 +53,15 @@ export class FlightPhysics {
     const targetSpeed = THREE.MathUtils.lerp(this.minSpeed, this.maxSpeed, this.throttle);
     this.speed = THREE.MathUtils.lerp(this.speed, targetSpeed, delta * 2.0);
 
-    // 2. Yaw (Heading turn): turning left (-1) turns left, turning right (+1) turns right
-    const yawDelta = this.inputLeftRight * this.turnRate * delta;
+    // 2. Yaw (Heading turn): turning left (-1) turns left on screen (positive yaw), turning right (+1) turns right on screen (negative yaw)
+    const yawDelta = -this.inputLeftRight * this.turnRate * delta;
     this.currentYaw += yawDelta;
 
     // 3. Target Pitch & Roll for visual orientation and movement direction
     // Input UP (+1) tilts nose UP (-pitch), Input DOWN (-1) tilts nose DOWN (+pitch)
     const targetPitch = -this.inputUpDown * this.maxPitchAngle;
-    // Input LEFT (-1) banks left (+roll: left wing down), Input RIGHT (+1) banks right (-roll: right wing down)
-    const targetRoll = -this.inputLeftRight * this.maxRollAngle;
+    // Input LEFT (-1) banks left (-roll: left wing dips down), Input RIGHT (+1) banks right (+roll: right wing dips down)
+    const targetRoll = this.inputLeftRight * this.maxRollAngle;
 
     // Smoothly interpolate current pitch & roll towards targets (auto-leveling when input is 0)
     const lerpFactor = delta * 5.0;
@@ -103,9 +103,10 @@ export class FlightPhysics {
 
   getHeadingDegrees() {
     const forward = new THREE.Vector3(0, 0, 1).applyQuaternion(this.quaternion);
-    let angle = Math.atan2(forward.x, forward.z) * (180 / Math.PI);
+    let angle = Math.atan2(-forward.x, forward.z) * (180 / Math.PI);
     if (angle < 0) angle += 360;
-    return Math.round(angle);
+    const rounded = Math.round(angle);
+    return rounded === 360 || Object.is(rounded, -0) ? 0 : rounded;
   }
 
   getHeadingCardinal() {
